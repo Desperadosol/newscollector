@@ -37,14 +37,16 @@ articles were given for it):
 
 For each category, select only the {MAX_ITEMS_PER_CATEGORY_IN_PROMPT} most \
 important or relevant items — do not include everything you were given. \
-For each selected item, write a 1-2 sentence summary in English (translate \
-if the source was in another language), followed by the source name and \
-the article's URL.
+For each selected item, write:
+1. A 1-2 sentence summary in English (translate if the source was in
+   another language).
+2. On the next line, exactly this format: "Source Name — https://url" —
+   always include the source name before the URL, on the same line.
 
 Output plain text only. Do not use Markdown or HTML formatting (no `**`, \
 no `#`, no `[text](url)` links) — write category headers as a short plain \
-line, and put each item's link as a bare URL on its own line so it stays \
-clickable. Keep the tone factual and neutral.
+line. The "Source Name — https://url" line keeps the link clickable since \
+Telegram auto-links bare URLs. Keep the tone factual and neutral.
 """
 
 
