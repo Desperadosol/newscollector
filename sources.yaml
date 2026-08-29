@@ -24,12 +24,17 @@
 # is a reliable general-purpose fallback for any topic that doesn't have a
 # good direct feed — use it if a feed below goes stale.
 
-recency_hours: 48       # drop articles older than this. Wider than 24h because
-                        # low-volume niche feeds (e.g. Belarusians-in-Poland)
-                        # don't publish daily; a tighter window would leave
-                        # that category empty most days. High-volume feeds
-                        # (BBC/Al Jazeera) are still capped by max_per_category
-                        # below, so this doesn't let them flood the digest.
+recency_hours: 168      # drop articles older than this (7 days). The narrow
+                        # niche categories below (Belarusian immigration
+                        # policy, students/young people) genuinely only get
+                        # real, on-topic coverage every several days to a
+                        # couple of weeks — a tighter window leaves them
+                        # empty almost every day. High-volume feeds (BBC/Al
+                        # Jazeera, general Poland politics/economics) are
+                        # still capped by max_per_category below and sorted
+                        # newest-first, so widening this doesn't change what
+                        # they select — a busy feed always has 15+ articles
+                        # well inside 168h anyway.
 max_per_category: 15    # cap the raw pool per category before the Claude call
 
 feeds:
@@ -93,20 +98,57 @@ feeds:
     topic: "poland_economics"
     keywords: []
 
-  # --- Belarusians in Poland ---
+  # --- Belarusians in Poland: policy/immigration focus ---
+  # Narrowed per user request to specifically track policies affecting
+  # Belarusian immigrants (visas, residency, asylum, border rules, legal
+  # status) rather than all Belarus-tagged news (which included e.g. crime
+  # stories unrelated to policy). The `keywords` list below does this
+  # filtering — both feeds keep their broad topical scope, but only articles
+  # whose title/summary mentions one of these policy/legal terms survive.
+  # Even so, expect this section to be empty on most days: genuine policy
+  # news for this specific group is inherently infrequent (real gaps of a
+  # week or more between stories are normal, not a bug).
   - name: "Notes from Poland — Belarus tag"
     url: "https://notesfrompoland.com/tag/belarus/feed/"
     topic: "belarusians_in_poland"
-    keywords: []
+    keywords: &belarus_policy_keywords
+      - visa
+      - residency
+      - residence
+      - permit
+      - immigration
+      - policy
+      - deportation
+      - legal status
+      - citizenship
+      - asylum
+      - refugee
+      - decree
+      - regulation
+      - ministry
+      - work permit
+      - travel document
+      - residence card
+      - border
+      - migration law
+      - karta polaka
+      - special status
 
-  # Broader OR-query than an exact phrase match: "Belarusians in Poland" as an
-  # exact phrase turns up almost nothing recent, since this is an inherently
-  # low-volume niche beat. This wider query still stays on-topic (requires
-  # "Belarusians"+"Poland" together, or "Belarusian minority") while actually
-  # surfacing same-day/next-day coverage. Some mornings this category may
-  # still be empty — that reflects real publishing volume on this topic, not
-  # a filtering bug; digest.py simply omits the section when it's empty.
   - name: "Google News — Belarusians in Poland"
     url: "https://news.google.com/rss/search?q=Belarusians+Poland+OR+%22Belarusian+minority%22&hl=en-US&gl=US&ceid=US:en"
     topic: "belarusians_in_poland"
+    keywords: *belarus_policy_keywords
+
+  # --- Students & young people in Poland ---
+  # New category per user request: news that would affect young people and
+  # international students in Poland (student visas, tuition/admissions
+  # policy, youth employment, housing affordability, education policy).
+  - name: "Google News — International students in Poland"
+    url: "https://news.google.com/rss/search?q=Poland+%22international+students%22+OR+%22student+visa%22+OR+%22foreign+students%22&hl=en-US&gl=US&ceid=US:en"
+    topic: "students_young_people"
+    keywords: []
+
+  - name: "Google News — Young people in Poland"
+    url: "https://news.google.com/rss/search?q=Poland+youth+OR+%22young+people%22+jobs+OR+housing+OR+education+OR+policy&hl=en-US&gl=US&ceid=US:en"
+    topic: "students_young_people"
     keywords: []

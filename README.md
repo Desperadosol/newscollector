@@ -1,10 +1,19 @@
 # News Collector — Daily Telegram Digest
 
-A personal bot that once a day fetches curated RSS feeds covering world
-politics, Polish politics, economics, and news about Belarusians in Poland;
-filters and dedupes them; asks Claude to pick the most relevant items and
-summarize them in English; and sends the result as one Telegram message. It
-runs on a free GitHub Actions scheduled workflow — no server, no database.
+A personal bot that once a day fetches curated RSS feeds covering:
+
+- World politics
+- Polish politics
+- Economics
+- Policies affecting Belarusian immigrants in Poland (visas, residency,
+  asylum, border rules — not general Belarus-related news)
+- News affecting students and young people in Poland (student visas,
+  education policy, youth employment/housing)
+
+...filters and dedupes them, asks Claude to pick the most relevant items
+and summarize them in English, and sends the result as one Telegram
+message. It runs on a free GitHub Actions scheduled workflow — no server,
+no database.
 
 ## Prerequisites
 
@@ -72,13 +81,22 @@ Each feed entry has:
 - `name` — shown in the digest as the source.
 - `url` — the RSS/Atom feed URL.
 - `topic` — a free-form category key. The digest is grouped by whatever
-  distinct `topic` values exist in this file. To add a 5th category, add a
-  feed with a new `topic` string and add one line to the
-  `CATEGORY_DISPLAY_NAMES` map at the top of `digest.py`.
+  distinct `topic` values exist in this file. Current topics:
+  `world_politics`, `poland_politics`, `poland_economics`,
+  `belarusians_in_poland` (narrowed to policy/immigration news, via
+  `keywords`), `students_young_people`. To add a 6th category, add a feed
+  with a new `topic` string, a line to the `CATEGORY_DISPLAY_NAMES` map in
+  `digest.py`, and a corresponding line in `digest.py`'s `SYSTEM_PROMPT`
+  category list.
 - `keywords` — optional. If non-empty, an article from that feed is only
   kept if at least one keyword (case-insensitive) appears in its title or
-  summary. Use this on broad, general-news feeds; leave empty (`[]`) for
-  feeds that are already topic-scoped.
+  summary. Use this both on broad, general-news feeds (e.g. BBC/Al Jazeera)
+  and to narrow an otherwise-broad topic to a specific angle — e.g. the
+  `belarusians_in_poland` feeds use a shared `keywords` list (via a YAML
+  anchor, `&belarus_policy_keywords`/`*belarus_policy_keywords`) to keep
+  only policy/legal/immigration stories rather than all Belarus-related
+  news. Leave empty (`[]`) for feeds that are already precisely scoped by
+  their query/URL.
 
 If a feed goes stale or a good direct feed doesn't exist for a topic, use a
 Google News RSS search query as a fallback:
