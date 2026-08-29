@@ -38,7 +38,7 @@ uses (one summarization call per day with `claude-haiku-4-5`), expect roughly
 ## 3. Local setup & testing
 
 ```bash
-git clone <this-repo-url>
+git clone https://github.com/Desperadosol/newscollector.git
 cd news_collector
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
