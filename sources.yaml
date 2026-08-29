@@ -139,16 +139,28 @@ feeds:
     topic: "belarusians_in_poland"
     keywords: *belarus_policy_keywords
 
-  # --- Students & young people in Poland ---
-  # New category per user request: news that would affect young people and
-  # international students in Poland (student visas, tuition/admissions
-  # policy, youth employment, housing affordability, education policy).
-  - name: "Google News — International students in Poland"
-    url: "https://news.google.com/rss/search?q=Poland+%22international+students%22+OR+%22student+visa%22+OR+%22foreign+students%22&hl=en-US&gl=US&ceid=US:en"
-    topic: "students_young_people"
+  # --- Work/internship opportunities for students in Poland ---
+  # Per user clarification, this category is specifically about new
+  # work/internship opportunities and career perspectives for students in
+  # Poland — not general "young people" news (housing, education policy,
+  # etc., which was the previous, broader interpretation). The query uses
+  # Google's `term (A OR B OR C)` grouping so every result is required to
+  # mention Poland *and* one of the internship/graduate-job terms — a plain
+  # "Poland X OR Y OR Z" query has low OR-precedence and only the first term
+  # ends up scoped to Poland, which let global noise (foreign graduate
+  # programs, unrelated "entry-level" sports contracts, etc.) through.
+  - name: "Google News — Student work & internships in Poland"
+    url: "https://news.google.com/rss/search?q=Poland+(internship+OR+%22graduate+programme%22+OR+%22graduate+program%22+OR+%22entry-level+job%22+OR+%22student+jobs%22)&hl=en-US&gl=US&ceid=US:en"
+    topic: "student_opportunities"
     keywords: []
 
-  - name: "Google News — Young people in Poland"
-    url: "https://news.google.com/rss/search?q=Poland+youth+OR+%22young+people%22+jobs+OR+housing+OR+education+OR+policy&hl=en-US&gl=US&ceid=US:en"
-    topic: "students_young_people"
+  # --- Tech companies in Poland ---
+  # New category per user request: news about tech companies operating in
+  # or expanding into Poland (funding rounds, new offices/tech hubs,
+  # startups, IT sector trends). Same Poland-AND-(terms) grouping as above,
+  # and deliberately excludes generic "funding"/"layoffs" as bare OR terms
+  # since those pulled in unrelated non-tech funding stories.
+  - name: "Google News — Tech companies in Poland"
+    url: "https://news.google.com/rss/search?q=Poland+(%22tech+company%22+OR+%22Polish+startup%22+OR+%22tech+industry%22+OR+%22IT+sector%22+OR+%22tech+hub%22+OR+%22software+company%22)&hl=en-US&gl=US&ceid=US:en"
+    topic: "tech_poland"
     keywords: []

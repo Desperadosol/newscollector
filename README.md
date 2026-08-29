@@ -7,8 +7,9 @@ A personal bot that once a day fetches curated RSS feeds covering:
 - Economics
 - Policies affecting Belarusian immigrants in Poland (visas, residency,
   asylum, border rules — not general Belarus-related news)
-- News affecting students and young people in Poland (student visas,
-  education policy, youth employment/housing)
+- New work/internship opportunities and career perspectives for students
+  in Poland
+- Tech companies in Poland (funding, new offices/tech hubs, startups)
 
 ...filters and dedupes them, asks Claude to pick the most relevant items
 and summarize them in English, and sends the result as one Telegram
@@ -84,10 +85,11 @@ Each feed entry has:
   distinct `topic` values exist in this file. Current topics:
   `world_politics`, `poland_politics`, `poland_economics`,
   `belarusians_in_poland` (narrowed to policy/immigration news, via
-  `keywords`), `students_young_people`. To add a 6th category, add a feed
-  with a new `topic` string, a line to the `CATEGORY_DISPLAY_NAMES` map in
-  `digest.py`, and a corresponding line in `digest.py`'s `SYSTEM_PROMPT`
-  category list.
+  `keywords`), `student_opportunities` (work/internship opportunities for
+  students, not general youth news), `tech_poland`. To add a 7th category,
+  add a feed with a new `topic` string, a line to the
+  `CATEGORY_DISPLAY_NAMES` map in `digest.py`, and a corresponding line in
+  `digest.py`'s `SYSTEM_PROMPT` category list.
 - `keywords` — optional. If non-empty, an article from that feed is only
   kept if at least one keyword (case-insensitive) appears in its title or
   summary. Use this both on broad, general-news feeds (e.g. BBC/Al Jazeera)

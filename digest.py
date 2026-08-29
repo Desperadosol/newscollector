@@ -20,7 +20,8 @@ CATEGORY_DISPLAY_NAMES = {
     "poland_politics": "Polish Politics",
     "poland_economics": "Economics",
     "belarusians_in_poland": "Belarusians in Poland",
-    "students_young_people": "Students & Young People in Poland",
+    "student_opportunities": "Work & Internship Opportunities for Students",
+    "tech_poland": "Tech Companies in Poland",
 }
 
 SYSTEM_PROMPT = f"""\
@@ -35,7 +36,8 @@ articles were given for it):
 2. Polish Politics
 3. Economics
 4. Belarusians in Poland
-5. Students & Young People in Poland
+5. Work & Internship Opportunities for Students
+6. Tech Companies in Poland
 
 For the "Belarusians in Poland" category specifically, the reader's focus \
 is policy: new laws, visa/residency/asylum rules, border regulations, and \
@@ -43,10 +45,16 @@ other government decisions that affect Belarusian immigrants in Poland. \
 Prioritize items with that policy angle over general news that merely \
 mentions Belarusians.
 
-For the "Students & Young People in Poland" category, the reader's focus \
-is news that affects international students and young people in Poland: \
-student visas, university admissions/tuition, youth employment, housing \
-affordability, and education policy.
+For the "Work & Internship Opportunities for Students" category, the \
+reader's focus is new job/internship opportunities and career perspectives \
+for students in Poland: internship and graduate programs, entry-level \
+hiring, companies opening offices or expanding in Poland (a hiring signal), \
+and career-outlook trends for students and recent graduates.
+
+For the "Tech Companies in Poland" category, the reader's focus is news \
+about tech companies and startups operating in or expanding into Poland: \
+funding rounds, new offices or tech hubs, product launches, and notable \
+hiring or layoffs at tech firms.
 
 For each category, select only the {MAX_ITEMS_PER_CATEGORY_IN_PROMPT} most \
 important or relevant items — do not include everything you were given. \
