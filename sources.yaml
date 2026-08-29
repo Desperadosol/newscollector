@@ -1,0 +1,112 @@
+# Feed configuration for the daily digest bot.
+#
+# Each entry under `feeds` is:
+#   name:     human-readable source name (shown in the digest)
+#   url:      RSS/Atom feed URL
+#   topic:    free-form category key. Digest sections are grouped by whatever
+#             distinct topic values exist here — add a 5th category by adding
+#             a feed with a new topic string, then a display-name line in
+#             digest.py's CATEGORY_DISPLAY_NAMES map.
+#   keywords: optional list. If non-empty, an article is only kept if at
+#             least one keyword (case-insensitive) appears in its title or
+#             summary. Use this on broad, general-news feeds (e.g. BBC/Al
+#             Jazeera cover everything, not just politics) to narrow them
+#             down before the LLM call. Leave empty ([]) for feeds that are
+#             already topic-scoped (e.g. a Google News search query, or a
+#             tag-specific feed) — they don't need extra filtering.
+#
+# NOTE ON FEED RELIABILITY: Reuters and AP News discontinued most of their
+# public RSS feeds, so this list deliberately avoids guessing at URLs like
+# feeds.reuters.com/* that are likely dead. Before relying on any feed here,
+# run `python check_feeds.py` to confirm it actually resolves and returns
+# entries. The Google News RSS search pattern below
+# (https://news.google.com/rss/search?q=<query>&hl=en-US&gl=US&ceid=US:en)
+# is a reliable general-purpose fallback for any topic that doesn't have a
+# good direct feed — use it if a feed below goes stale.
+
+recency_hours: 48       # drop articles older than this. Wider than 24h because
+                        # low-volume niche feeds (e.g. Belarusians-in-Poland)
+                        # don't publish daily; a tighter window would leave
+                        # that category empty most days. High-volume feeds
+                        # (BBC/Al Jazeera) are still capped by max_per_category
+                        # below, so this doesn't let them flood the digest.
+max_per_category: 15    # cap the raw pool per category before the Claude call
+
+feeds:
+  # --- World politics ---
+  - name: "BBC World"
+    url: "https://feeds.bbci.co.uk/news/world/rss.xml"
+    topic: "world_politics"
+    keywords:
+      - election
+      - government
+      - president
+      - minister
+      - parliament
+      - sanctions
+      - diplomat
+      - war
+      - coup
+      - summit
+      - opposition
+      - treaty
+      - NATO
+      - UN
+
+  - name: "Al Jazeera — All News"
+    url: "https://www.aljazeera.com/xml/rss/all.xml"
+    topic: "world_politics"
+    keywords:
+      - election
+      - government
+      - president
+      - minister
+      - parliament
+      - sanctions
+      - diplomat
+      - summit
+      - opposition
+      - treaty
+      - NATO
+      - UN
+
+  # --- Polish politics ---
+  # NOTE: "The First News" (thefirstnews.com) was tried here but its site-wide
+  # TLS certificate is misconfigured (hostname mismatch) as of this writing,
+  # so requests to any of its RSS paths fail SSL verification. Dropped in
+  # favor of a Google News query for redundancy alongside Notes from Poland;
+  # re-add it if/when their certificate is fixed (confirm with check_feeds.py
+  # first).
+  - name: "Notes from Poland"
+    url: "https://notesfrompoland.com/feed/"
+    topic: "poland_politics"
+    keywords: []
+
+  - name: "Google News — Poland politics"
+    url: "https://news.google.com/rss/search?q=Poland+politics+OR+government+OR+election&hl=en-US&gl=US&ceid=US:en"
+    topic: "poland_politics"
+    keywords: []
+
+  # --- Polish economics ---
+  - name: "Google News — Poland economy"
+    url: "https://news.google.com/rss/search?q=Poland+economy&hl=en-US&gl=US&ceid=US:en"
+    topic: "poland_economics"
+    keywords: []
+
+  # --- Belarusians in Poland ---
+  - name: "Notes from Poland — Belarus tag"
+    url: "https://notesfrompoland.com/tag/belarus/feed/"
+    topic: "belarusians_in_poland"
+    keywords: []
+
+  # Broader OR-query than an exact phrase match: "Belarusians in Poland" as an
+  # exact phrase turns up almost nothing recent, since this is an inherently
+  # low-volume niche beat. This wider query still stays on-topic (requires
+  # "Belarusians"+"Poland" together, or "Belarusian minority") while actually
+  # surfacing same-day/next-day coverage. Some mornings this category may
+  # still be empty — that reflects real publishing volume on this topic, not
+  # a filtering bug; digest.py simply omits the section when it's empty.
+  - name: "Google News — Belarusians in Poland"
+    url: "https://news.google.com/rss/search?q=Belarusians+Poland+OR+%22Belarusian+minority%22&hl=en-US&gl=US&ceid=US:en"
+    topic: "belarusians_in_poland"
+    keywords: []
