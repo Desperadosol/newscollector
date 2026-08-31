@@ -2,14 +2,23 @@ name: Daily Digest
 
 on:
   schedule:
-    # 06:00 UTC daily -> 7:00 AM CET (winter) / 8:00 AM CEST (summer) in
+    # 04:37 UTC daily -> 5:37 AM CET (winter) / 6:37 AM CEST (summer) in
     # Warsaw. GitHub Actions cron is fixed UTC and does not adjust for DST,
-    # so there is no single UTC value that's exactly 7 AM Warsaw year-round;
-    # this was chosen to keep delivery in the "morning" range in both
-    # seasons rather than skewing to 6 AM in winter. Also note: GitHub may
-    # delay scheduled runs by a few to ~15 minutes under load — normal, and
-    # fine for a non-time-critical personal digest.
-    - cron: '0 6 * * *'
+    # so there is no single UTC value that's exactly the same local time
+    # year-round.
+    #
+    # Why 04:37 and not the 06:00 you'd expect for an 8 AM delivery:
+    # GitHub's scheduler is best-effort and queues *all* users' cron jobs
+    # globally. Round times — and the top of the hour above all — are by far
+    # the most heavily subscribed slots, so runs scheduled at ':00' routinely
+    # sit in the queue for hours before a runner picks them up. An odd minute
+    # at an off-peak hour lands in a much shorter queue.
+    #
+    # The remaining delay is still unpredictable (minutes to ~2h), so this is
+    # deliberately scheduled *early*: worst case the digest arrives late
+    # morning, best case shortly before 7 AM local. If it consistently fires
+    # on time, move this later toward '37 5 * * *'.
+    - cron: '37 4 * * *'
   workflow_dispatch: {}  # manual "Run workflow" button, for testing
 
 jobs:

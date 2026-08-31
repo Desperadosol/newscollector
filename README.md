@@ -125,10 +125,18 @@ returns a reasonable number of articles.
    `workflow_dispatch` trigger). Watch the run log for per-feed fetch
    results and the final "Digest sent to Telegram" line, then check
    Telegram for the message.
-5. Once that works, the scheduled run (`06:00 UTC` daily — see the comment
+5. Once that works, the scheduled run (`04:37 UTC` daily — see the comment
    in `.github/workflows/daily-digest.yml` for the DST tradeoff, since
-   Warsaw is UTC+1/+2 depending on season) will fire automatically. GitHub
-   may delay scheduled runs by a few minutes under load — normal.
+   Warsaw is UTC+1/+2 depending on season) will fire automatically.
+
+   **On scheduled-run delays**: GitHub Actions cron is best-effort, not
+   guaranteed. Jobs queue globally, and slots at the top of the hour are so
+   oversubscribed that a `0 6 * * *` schedule can sit queued for hours. The
+   odd, off-peak minute above exists specifically to dodge that. Expect
+   delivery anywhere from ~5:40 to ~7 AM local; if it is still routinely
+   hours late, the cause is queue pressure rather than anything in this
+   repo, and the fix is a self-hosted runner or an external scheduler that
+   calls the workflow via `workflow_dispatch`.
 
 ## Troubleshooting
 
